@@ -1,0 +1,34 @@
+
+version: "3"
+
+services:
+  database:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: autjwt
+      POSTGRES_PASSWORD: autjwt
+    ports:
+      - 5454:5432
+    networks:
+      - postgres-network
+    volumes:
+    - /var/lib/postgresql/data/
+    - /docker-entrypoint-initdb.d/init.sql
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: youremail@email.com
+      PGADMIN_DEFAULT_PASSWORD: pw123456
+    ports:
+      - 15434:80
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+    volumes:
+      - /var/lib/pgadmin/
+
+networks: 
+  postgres-network:
+    driver: bridge
